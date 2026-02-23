@@ -1,0 +1,26 @@
+# Large datasets
+US_flights_2023.csv
+Final_flight.csv
+Cancelled_Diverted_2023.csv
+maj us flight - january 2024.csv
+weather_meteo_by_airport.csv
+archive.zip
+
+# Large videos / presentations
+Final Presentation.mp4
+Final Presentation.mp4.crswap
+prezi/
+
+# Python caches
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+
+# Virtual environments
+venv/
+env/
+.env
+
+# Streamlit
+.streamlit/
