@@ -90,47 +90,61 @@ else:
 
 # --- 2. Association Rules ---
 st.header("2. Association Rules for Severe Delays")
-st.markdown("Frequent itemsets and association rules discovered using Apriori algorithm.")
+st.markdown("Top association rules discovered using the Apriori algorithm.")
 
-col1, col2 = st.columns([1, 1], gap="medium")
-
-with col1:
-    df_rules = load_csv("all_association_rules_full.csv")
-    if df_rules is None and os.path.exists("association_rules_results.csv"):
-        df_rules = load_csv("association_rules_results.csv")
+df_rules = load_csv("all_association_rules_full.csv")
+if df_rules is None and os.path.exists("association_rules_results.csv"):
+    df_rules = load_csv("association_rules_results.csv")
+    
+if df_rules is not None:
+    # Clean up the ugly frozenset formatting
+    def clean_rule(text):
+        if pd.isna(text): return ""
+        return str(text).replace("frozenset({", "").replace("})", "").replace("'", "")
         
-    if df_rules is not None:
-        # Clean up the dataframe display
-        st.dataframe(
-            df_rules, 
-            use_container_width=True,
-            hide_index=True,
-            column_config={
-                "support": st.column_config.NumberColumn("Support", format="%.4f"),
-                "confidence": st.column_config.NumberColumn("Confidence", format="%.2f"),
-                "lift": st.column_config.NumberColumn("Lift", format="%.2f"),
-            }
-        )
-    else:
-        st.info("Rules data not found. Run Rules.py first.")
+    df_rules['antecedents'] = df_rules['antecedents'].apply(clean_rule)
+    df_rules['consequents'] = df_rules['consequents'].apply(clean_rule)
+    df_rules['Rule'] = df_rules['antecedents'] + "  ➔  " + df_rules['consequents']
 
-with col2:
-    if df_rules is not None:
-        fig = px.scatter(
+    col1, col2 = st.columns([1, 1], gap="large")
+
+    with col1:
+        st.markdown("### Top 15 Rules by Lift")
+        top_rules = df_rules.nlargest(15, 'lift')
+        fig_bar = px.bar(
+            top_rules,
+            x="lift",
+            y="Rule",
+            orientation="h",
+            color="confidence",
+            hover_data=["support"],
+            labels={"lift": "Lift", "confidence": "Confidence", "Rule": ""},
+            color_continuous_scale="Sunsetdark"
+        )
+        fig_bar.update_layout(yaxis={'categoryorder':'total ascending'})
+        st.plotly_chart(fig_bar, use_container_width=True)
+
+    with col2:
+        st.markdown("### Rules Distribution")
+        fig_scatter = px.scatter(
             df_rules,
             x="support",
             y="confidence",
             color="lift",
-            hover_data=["antecedents", "consequents"],
-            title="Association Rules: Confidence vs. Support",
+            hover_data=["Rule"],
             labels={"support": "Support", "confidence": "Confidence", "lift": "Lift"},
             color_continuous_scale="Viridis"
         )
-        st.plotly_chart(fig, use_container_width=True)
-    elif os.path.exists("rules_plot.png"):
-        st.image("rules_plot.png", caption="Association Rules Scatter Plot", use_container_width=True)
-    else:
-        st.info("Rules plot not found.")
+        st.plotly_chart(fig_scatter, use_container_width=True)
+        
+    with st.expander("View Cleaned Rules Dataset"):
+        st.dataframe(
+            df_rules[["Rule", "antecedent support", "consequent support", "support", "confidence", "lift"]], 
+            use_container_width=True,
+            hide_index=True
+        )
+else:
+    st.info("Rules data not found. Run Rules.py first.")
 
 # --- 3. Feature Importance & Classification ---
 st.header("3. Classification Feature Importance")
