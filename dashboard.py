@@ -12,6 +12,14 @@ This dashboard presents the results of the Machine Learning Term Project (CS5805
 It covers Airport Clustering, Association Rules for Delays, Classification, and Regression models.
 """)
 
+st.info("""
+### 💡 Key Project Conclusions & Takeaways
+Based on our Machine Learning pipelines, we discovered three actionable insights regarding nationwide flight delays:
+1. **Not All Airports Fail Equally (Clustering):** Massive flight volume does not guarantee delays (e.g., ATL is a hyper-efficient 'Mega-Hub'), while certain smaller regional airports consistently fail under pressure ('High Risk'). Geographic topology and facility design are just as important as size.
+2. **Cascading Failure Conditions (Apriori Rules):** Severe delays are rarely caused by a single isolated variable. Our rules engine proved that specific combinations—like *Alaska Airlines encountering Freezing Weather*—create compounding risk multipliers (Lift > 2.0) that predictably cascade into system-wide delays.
+3. **Predictable Operational Risk (Classification/Regression):** A flight's delay is not random; it is highly deterministic. Our Random Forest classification models successfully proved that simply knowing the Departure Airport, Time of Day, and Carrier allows us to accurately estimate the tangible delay risk *before* the plane ever boards.
+""")
+
 # --- Helper to load data safely ---
 @st.cache_data
 def load_csv(filename):
