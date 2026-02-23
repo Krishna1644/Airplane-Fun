@@ -50,7 +50,7 @@ if df_clusters is not None:
         tier = int(row['Performance_Tier'])
         color = tier_colors.get(tier, 'black')
         
-        popup_text = f"<b>{row['AIRPORT']} ({row['Dep_Airport']})</b><br>Tier: {tier_names.get(tier, str(tier))}<br>Avg Delay: {row['avg_dep_delay']:.1f} min"
+        popup_text = f"<b>{row['AIRPORT']} ({row['Dep_Airport']})</b><br>Tier: {tier_names.get(tier, str(tier))}<br>Total Flights: {row['total_flights']:,}<br>Avg Delay: {row['avg_dep_delay']:.1f} min"
         
         folium.CircleMarker(
             location=[row['LATITUDE'], row['LONGITUDE']],
