@@ -20,12 +20,15 @@ def load_csv(filename):
     return None
 
 # --- 1. Clustering Results ---
-st.header("1. Airport Performance Tiers (Clustering)")
+st.header("1. Airport Categories (Clustering)")
 st.markdown("""
-**What this shows:** We used K-Means clustering to group US airports into 5 distinct "Performance Tiers" based on their historical delay frequencies and vulnerability to weather. 
-- **Mega-Hubs (Tier 4)** represents massive airports with high flight volumes.
-- **High Risk (Tier 1)** represents airports that historically suffer from severe delays and weather disruptions.
-**Why it matters:** This helps airlines and passengers immediately identify which airports are the most reliable, and which ones are prone to systemic delays.
+**What this shows:** We used K-Means clustering to analyze historical flight data and group US airports into 5 distinct categories based on their flight volumes, delay frequencies, and volatility. 
+- **Mega-Hubs (Orange):** Massive airports with extremely high flight volumes (e.g., ATL, ORD, DFW).
+- **Efficient Regional (Green):** Airports with excellent performance and low average delays.
+- **Secondary Hubs (Purple):** Medium-to-large transit airports with average operational performance.
+- **Underperforming (Blue):** Airports experiencing worse-than-average delays relative to their size.
+- **High Risk / Chaotic (Red):** Airports that historically suffer from the most severe, systemic delays and unpredictability.
+**Why it matters:** This helps airlines and passengers immediately visualize the reliability of different airports across the country, shifting focus from raw numbers to actionable operational archetypes.
 """)
 df_clusters = load_csv("airport_performance_tiers_enriched.csv")
 if df_clusters is not None:
@@ -41,11 +44,11 @@ if df_clusters is not None:
         1: 'red'     # High Risk
     }
     tier_names = {
-        4: 'Mega-Hub (Tier 4)',
-        3: 'Efficient (Tier 3)',
-        0: 'Secondary (Tier 0)',
-        2: 'Underperforming (Tier 2)',
-        1: 'High Risk (Tier 1)'
+        4: 'Mega-Hub',
+        3: 'Efficient Regional',
+        0: 'Secondary Hub',
+        2: 'Underperforming',
+        1: 'High Risk / Chaotic'
     }
     
     # Create the map centered on the US
@@ -55,7 +58,7 @@ if df_clusters is not None:
         tier = int(row['Performance_Tier'])
         color = tier_colors.get(tier, 'black')
         
-        popup_text = f"<b>{row['AIRPORT']} ({row['Dep_Airport']})</b><br>Tier: {tier_names.get(tier, str(tier))}<br>Total Flights: {row['total_flights']:,}<br>Avg Delay: {row['avg_dep_delay']:.1f} min"
+        popup_text = f"<b>{row['AIRPORT']} ({row['Dep_Airport']})</b><br>Category: {tier_names.get(tier, str(tier))}<br>Total Flights: {row['total_flights']:,}<br>Avg Delay: {row['avg_dep_delay']:.1f} min"
         
         folium.CircleMarker(
             location=[row['LATITUDE'], row['LONGITUDE']],
@@ -70,17 +73,17 @@ if df_clusters is not None:
         
     legend_html = '''
      <div style="position: fixed; 
-     bottom: 50px; left: 50px; width: 200px; height: 160px; 
+     bottom: 50px; left: 50px; width: 220px; height: 160px; 
      border:2px solid grey; z-index:9999; font-size:14px;
      background-color:white;
      padding: 10px;
      ">
-     <b>Performance Tiers</b><br>
-     &nbsp; <i class="fa fa-circle" style="color:orange"></i> Mega-Hub (Tier 4)<br>
-     &nbsp; <i class="fa fa-circle" style="color:green"></i> Efficient (Tier 3)<br>
-     &nbsp; <i class="fa fa-circle" style="color:purple"></i> Secondary (Tier 0)<br>
-     &nbsp; <i class="fa fa-circle" style="color:cadetblue"></i> Underperforming (Tier 2)<br>
-     &nbsp; <i class="fa fa-circle" style="color:red"></i> High Risk (Tier 1)
+     <b>Airport Categories</b><br>
+     &nbsp; <i class="fa fa-circle" style="color:orange"></i> Mega-Hub<br>
+     &nbsp; <i class="fa fa-circle" style="color:green"></i> Efficient Regional<br>
+     &nbsp; <i class="fa fa-circle" style="color:purple"></i> Secondary Hub<br>
+     &nbsp; <i class="fa fa-circle" style="color:cadetblue"></i> Underperforming<br>
+     &nbsp; <i class="fa fa-circle" style="color:red"></i> High Risk / Chaotic
       </div>
      '''
     m.get_root().html.add_child(folium.Element(legend_html))
