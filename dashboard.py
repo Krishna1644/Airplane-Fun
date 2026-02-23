@@ -102,15 +102,29 @@ if df_rules is not None:
         if pd.isna(text): return ""
         return str(text).replace("frozenset({", "").replace("})", "").replace("'", "")
         
-    df_rules['antecedents'] = df_rules['antecedents'].apply(clean_rule)
-    df_rules['consequents'] = df_rules['consequents'].apply(clean_rule)
-    df_rules['Rule'] = df_rules['antecedents'] + "  ➔  " + df_rules['consequents']
+    df_rules['antecedents_clean'] = df_rules['antecedents'].apply(clean_rule)
+    df_rules['consequents_clean'] = df_rules['consequents'].apply(clean_rule)
+    
+    # Remove A -> B and B -> A duplicates by creating a sorted set string
+    def create_itemset_key(row):
+        # Merge the lists of items from antecedents and consequents
+        items = row['antecedents_clean'].split(', ') + row['consequents_clean'].split(', ')
+        # Sort them and join to create a unique identifier for the complete itemset
+        return " | ".join(sorted([i.strip() for i in items if i.strip()]))
+        
+    df_rules['itemset_key'] = df_rules.apply(create_itemset_key, axis=1)
+    
+    # Sort by lift so we keep the rule direction with the highest lift when dropping duplicates
+    df_rules = df_rules.sort_values(by='lift', ascending=False)
+    df_rules = df_rules.drop_duplicates(subset=['itemset_key'], keep='first')
+        
+    df_rules['Rule'] = df_rules['antecedents_clean'] + "  ➔  " + df_rules['consequents_clean']
 
     col1, col2 = st.columns([1, 1], gap="large")
 
     with col1:
-        st.markdown("### Top 15 Rules by Lift")
-        top_rules = df_rules.nlargest(15, 'lift')
+        st.markdown("### Top 10 Unique Rules by Lift")
+        top_rules = df_rules.head(10) # Grab the top 10 since we already sorted by lift
         fig_bar = px.bar(
             top_rules,
             x="lift",
