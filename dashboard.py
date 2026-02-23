@@ -21,7 +21,12 @@ def load_csv(filename):
 
 # --- 1. Clustering Results ---
 st.header("1. Airport Performance Tiers (Clustering)")
-st.markdown("Airports clustered into 5 tiers based on metrics like delay frequency and weather impact.")
+st.markdown("""
+**What this shows:** We used K-Means clustering to group US airports into 5 distinct "Performance Tiers" based on their historical delay frequencies and vulnerability to weather. 
+- **Mega-Hubs (Tier 4)** represents massive airports with high flight volumes.
+- **High Risk (Tier 1)** represents airports that historically suffer from severe delays and weather disruptions.
+**Why it matters:** This helps airlines and passengers immediately identify which airports are the most reliable, and which ones are prone to systemic delays.
+""")
 df_clusters = load_csv("airport_performance_tiers_enriched.csv")
 if df_clusters is not None:
     import folium
@@ -90,7 +95,12 @@ else:
 
 # --- 2. Association Rules ---
 st.header("2. Association Rules for Severe Delays")
-st.markdown("Top association rules discovered using the Apriori algorithm.")
+st.markdown("""
+**What this shows:** We used the Apriori algorithm to discover common "recipes" or conditions that lead to severe flight delays. 
+- **Rule (A ➔ B):** If condition A happens, then B is likely to happen.
+- **Lift:** A multiplier showing how much more likely B is to happen when A occurs, compared to normal. A Lift > 1 means a strong relationship.
+**Why it matters:** It shifts our perspective from looking at single variables to understanding how combinations (like *Snowy Weather + a specific Airline*) trigger cascading delays.
+""")
 
 df_rules = load_csv("all_association_rules_full.csv")
 if df_rules is None and os.path.exists("association_rules_results.csv"):
@@ -162,7 +172,10 @@ else:
 
 # --- 3. Feature Importance & Classification ---
 st.header("3. Classification Feature Importance")
-st.markdown("Importance of features for predicting severe delays.")
+st.markdown("""
+**What this shows:** We trained Machine Learning classification models (like Random Forests) to predict whether a specific flight will be delayed. This chart shows which variables the AI found most critical when making its predictions.
+**Why it matters:** It proves that certain factors (like the specific Departure Airport or the Departure Time) play a disproportionately massive role in whether your flight will be on time.
+""")
 df_feat = load_csv("feature_importance.csv")
 if df_feat is not None:
     top_features = df_feat.head(15).sort_values(by="Importance", ascending=True)
@@ -181,7 +194,12 @@ else:
     
 # --- 4. Regression Analysis ---
 st.header("4. Arrival Delay Regression Models")
-st.markdown("Performance of regression models aimed at predicting exact delay minutes.")
+st.markdown("""
+**What this shows:** While classification predicts *if* a flight will be delayed, Regression models attempt to predict *exactly how many minutes* the flight will be delayed. 
+- **RMSE (Root Mean Squared Error):** Indicates the model's average error in minutes. A lower RMSE is better.
+- **R² (R-squared):** Indicates how much of the delay variance the model successfully predicted. 
+**Why it matters:** It demonstrates the project's capability to assign a tangible, numerical operational risk to any individual flight based on current conditions.
+""")
 df_reg = load_csv("regression_metrics.csv")
 if df_reg is not None:
     # Display top model metrics as KPIs
