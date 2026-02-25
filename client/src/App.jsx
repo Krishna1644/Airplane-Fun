@@ -84,11 +84,11 @@ function App() {
 
   const getTierColor = (tier) => {
     const colors = {
-      0: "#3b82f6", // Secondary
-      1: "#ef4444", // High Risk
-      2: "#f59e0b", // Underperforming
-      3: "#10b981", // Efficient
-      4: "#8b5cf6", // MegaHub
+      0: "#e2e8f0", // Standard (White/Silver)
+      1: "#ef4444", // High Risk (Red)
+      2: "#3b82f6", // Moderate (Blue)
+      3: "#10b981", // Efficient (Green)
+      4: "#fbbf24", // Hub (Gold)
     };
     return colors[tier] || "#64748b";
   };
@@ -119,7 +119,7 @@ function App() {
               value={formData.Origin_Airport}
               onChange={handleInputChange}
               placeholder="e.g. ATL, ORD"
-              maxLength={3}
+              list="airport-list"
               required
             />
 
@@ -129,9 +129,17 @@ function App() {
               value={formData.Destination_Airport}
               onChange={handleInputChange}
               placeholder="e.g. LAX, JFK"
-              maxLength={3}
+              list="airport-list"
               required
             />
+
+            <datalist id="airport-list">
+              {airports.map((airport, idx) => (
+                <option key={idx} value={airport.Dep_Airport}>
+                  {airport.Dep_Airport} - {airport.AIRPORT}
+                </option>
+              ))}
+            </datalist>
 
             <label>Carrier / Airline</label>
             <select
@@ -250,14 +258,6 @@ function App() {
                 weight={1}
                 opacity={0.8}
                 fillOpacity={0.6}
-                eventHandlers={{
-                  click: () => {
-                    setFormData((prev) => ({
-                      ...prev,
-                      Origin_Airport: airport.Dep_Airport,
-                    }));
-                  },
-                }}
               >
                 <Popup>
                   <div style={{ color: "#1e293b", padding: "5px" }}>
@@ -269,7 +269,39 @@ function App() {
                     <br />
                     Avg Delay: {airport.avg_dep_delay?.toFixed(1)} min
                     <br />
-                    <i>Click marker to select as Origin</i>
+                    <button 
+                      onClick={() => setFormData((prev) => ({ ...prev, Origin_Airport: airport.Dep_Airport }))}
+                      style={{
+                        marginTop: '8px', 
+                        padding: '4px 8px', 
+                        background: '#3b82f6', 
+                        color: 'white', 
+                        border: 'none', 
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem',
+                        width: '48%',
+                        marginRight: '4%'
+                      }}
+                    >
+                      Set Origin
+                    </button>
+                    <button 
+                      onClick={() => setFormData((prev) => ({ ...prev, Destination_Airport: airport.Dep_Airport }))}
+                      style={{
+                        marginTop: '8px', 
+                        padding: '4px 8px', 
+                        background: '#10b981', 
+                        color: 'white', 
+                        border: 'none', 
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem',
+                        width: '48%'
+                      }}
+                    >
+                      Set Dest.
+                    </button>
                   </div>
                 </Popup>
               </CircleMarker>
@@ -296,6 +328,18 @@ function App() {
               </>
             )}
           </MapContainer>
+
+          <div className="map-legend">
+            <h4>Airport Performance Tiers</h4>
+            <div className="legend-item"><span style={{background: '#fbbf24'}}></span> High Volume Hub (Tier 4)</div>
+            <div className="legend-item"><span style={{background: '#10b981'}}></span> High Reliability (Tier 3)</div>
+            <div className="legend-item"><span style={{background: '#3b82f6'}}></span> Moderate Volatility (Tier 2)</div>
+            <div className="legend-item"><span style={{background: '#ef4444'}}></span> Maximum Risk/Delay (Tier 1)</div>
+            <div className="legend-item"><span style={{background: '#e2e8f0'}}></span> Standard Regional (Tier 0)</div>
+            <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: '8px' }}>
+              Based on flight volume & delay predictability
+            </div>
+          </div>
         </section>
       </main>
     </div>

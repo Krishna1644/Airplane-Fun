@@ -11,6 +11,9 @@ import ast
 import requests
 import math
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI(title="Flight Risk Evaluator API")
 

@@ -1,58 +1,72 @@
-# US Flight Operational Risk Analysis Setup (Web App)
+# ✈️ AI-Powered Flight Risk Evaluator
 
-This repository contains the Machine Learning Application predicting flight delays and modeling severe operational risks.
+Welcome to the **Flight Risk Evaluator**! This project is an end-to-end Machine Learning web application designed to predict flight delays and model severe operational risks across major US airports. It integrates historical flight performance data with complex environmental risk factors to deliver actionable, real-time predictions.
 
-## Architecture
+![Flight Risk Evaluator Dashboard](dashboard.png)
+_(Note: Ensure you include a screenshot of your dashboard named `dashboard.png` in the root of the repository)_
 
-- **Frontend**: React (`/client`)
-- **Backend**: FastAPI (`/api`)
-- **Machine Learning Models**: Scikit-Learn (Hosted remotely on Hugging Face)
+## 🌟 Key Features
 
-## Prerequisites
+- **Dynamic Risk Prediction**: Utilizes Scikit-Learn **Random Forest Regressors** to predict both Expected Departure Delay and Expected Arrival Delay, accounting for potential in-air recovery.
+- **Severe Risk Indexing**: Calculates a blended Confidence and Lift score using **Apriori Association Rules**, evaluating localized weather patterns (snow, rain, wind), carrier performance, and time-block traffic to flag high-risk flights.
+- **Interactive Airport Map**: Features an intuitive, interactive map built on **React-Leaflet** and CARTO dark tiles. Airports are color-coded into Performance Tiers based on **K-Means clustering analysis** of delay volatility and flight volume.
+- **Sleek UI/UX**: Designed with a modern, dark-mode glassmorphism aesthetic using vanilla CSS, offering a premium and responsive user experience without heavy UI framework bloat.
+- **Cloud-Optimized Architecture**: The Python backend dynamically fetches the heavy serialized `.joblib` machine learning models from a remote **Hugging Face Hub** repository at runtime, keeping this GitHub repository incredibly lightweight and easy to deploy.
 
-- Node.js
+## 🛠️ Technology Stack
+
+- **Frontend Development**: React.js, Vite, React-Leaflet, PapaParse
+- **UI/UX Design**: Vanilla CSS (CSS Grid/Flexbox, Custom Animations, Glassmorphism elements)
+- **Backend API**: Python, FastAPI, Uvicorn
+- **Data Engineering & ML**: Pandas, Scikit-Learn (Random Forest, K-Means PCA), Hugging Face `huggingface_hub`
+
+## 🧠 Machine Learning Architecture
+
+This project implements a sophisticated multi-stage ML pipeline:
+
+1. **Unsupervised Learning (K-Means)**: Groups thousands of US airports into 5 distinct Performance Tiers (e.g., High Volume Hubs, Maximum Risk) based on their historical delay volatility and overall traffic volume.
+2. **Association Rule Mining (Apriori)**: Extracts rules that strongly associate environmental conditions (e.g., wind > 15mph, snow > 0.5in) and temporal patterns with severe delays, generating actionable text-based warning conditions.
+3. **Supervised Learning (Random Forest)**: Acts as the core predictive engine that provides the continuous expected delay output in minutes for both departure and arrival phases.
+
+## 🚀 Quick Start Guide
+
+### Prerequisites
+
+- Node.js (v18+)
 - Python 3.8+
 
-## API Setup (Backend)
+### 1. API Setup (Backend)
 
-The backend dynamically downloads the required multi-stage Machine Learning models from a remote Hugging Face repository upon first startup to keep the GitHub repository incredibly lightweight.
-
-1. Navigate to the API folder
+The backend dynamically downloads the required Machine Learning models from a remote Hugging Face repository upon first startup.
 
 ```bash
+# Navigate to the backend API folder
 cd api
-```
 
-2. Install Python dependencies
-
-```bash
+# Install Python dependencies
 pip install -r requirements.txt
-```
 
-3. Start the FastAPI Server (This will automatically download the models on first boot)
-
-```bash
+# Start the FastAPI Server
 uvicorn main:app --reload
 ```
 
-## Client Setup (Frontend)
+_The API will run on `http://localhost:8000`._
 
-1. Open a new terminal and navigate to the client folder
+### 2. Client Setup (Frontend)
 
 ```bash
+# Open a new terminal and navigate to the frontend client folder
 cd client
-```
 
-2. Install npm dependencies
-
-```bash
+# Install npm dependencies
 npm install
-```
 
-3. Start the development server
-
-```bash
+# Start the React development server
 npm run dev
 ```
 
-_Note: The raw data analysis notebooks and scripts used to train the original models are preserved in the `archive` commit history for reference._
+_The application UI will run on `http://localhost:5173`._
+
+---
+
+_Note: The raw data analysis notebooks, extensive dataset filtering scripts, and clustering experiments used to train the original models are preserved in the `archive` directory for technical review._
