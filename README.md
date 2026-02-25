@@ -1,4 +1,4 @@
-# ✈️ AI-Powered Flight Risk Evaluator
+# ✈️ Flight Risk Evaluator
 
 Welcome to the **Flight Risk Evaluator**! This project is an end-to-end Machine Learning web application designed to predict flight delays and model severe operational risks across major US airports. It integrates historical flight performance data with complex environmental risk factors to deliver actionable, real-time predictions.
 
