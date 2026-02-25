@@ -3,7 +3,6 @@
 Welcome to the **Flight Risk Evaluator**! This project is an end-to-end Machine Learning web application designed to predict flight delays and model severe operational risks across major US airports. It integrates historical flight performance data with complex environmental risk factors to deliver actionable, real-time predictions.
 
 ![Flight Risk Evaluator Dashboard](dashboard.png)
-_(Note: Ensure you include a screenshot of your dashboard named `dashboard.png` in the root of the repository)_
 
 ## 🌟 Key Features
 
