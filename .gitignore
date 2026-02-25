@@ -24,3 +24,7 @@ env/
 
 # Streamlit
 .streamlit/
+
+# Archive
+archive/
+clean_repo.py
