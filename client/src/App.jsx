@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, CircleMarker, Popup, Polyline } from "react-le
 import "leaflet/dist/leaflet.css";
 import Papa from "papaparse";
 
-const API_BASE_URL = "http://localhost:8000"; // Make sure the FastAPI backend is running!
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"; // Dynamic URL for production, localhost for dev
 
 function App() {
   const [formData, setFormData] = useState({
