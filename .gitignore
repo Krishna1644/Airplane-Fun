@@ -28,3 +28,6 @@ env/
 # Archive
 archive/
 clean_repo.py
+
+# Models
+*.joblib

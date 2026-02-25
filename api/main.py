@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
+from huggingface_hub import hf_hub_download
 import io
 import ast
 import requests
@@ -23,15 +24,22 @@ app.add_middleware(
 
 # Paths to models and data
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STAGE1_MODEL_PATH = os.path.join(BASE_DIR, "stage1_model.joblib")
-STAGE2_MODEL_PATH = os.path.join(BASE_DIR, "stage2_model.joblib")
 RULES_CSV_PATH = os.path.join(BASE_DIR, "all_association_rules_full.csv")
 TIERS_CSV_PATH = os.path.join(BASE_DIR, "airport_performance_tiers_enriched.csv")
 
+# Hugging Face Repo Info
+HF_REPO_ID = "krishna1644/flight-risk-models"
+
 # Load models and rules
 try:
-    stage1_pipe = joblib.load(STAGE1_MODEL_PATH)
-    stage2_pipe = joblib.load(STAGE2_MODEL_PATH)
+    print("Checking Hugging Face for models (this may take a minute on first run)...")
+    
+    # hf_hub_download caches the models locally, so it only downloads once!
+    stage1_remote_path = hf_hub_download(repo_id=HF_REPO_ID, filename="stage1_model.joblib")
+    stage2_remote_path = hf_hub_download(repo_id=HF_REPO_ID, filename="stage2_model.joblib")
+    
+    stage1_pipe = joblib.load(stage1_remote_path)
+    stage2_pipe = joblib.load(stage2_remote_path)
     rules_df = pd.read_csv(RULES_CSV_PATH)
     tiers_df = pd.read_csv(TIERS_CSV_PATH)
 except Exception as e:

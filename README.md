@@ -1,49 +1,58 @@
-# US Flight Operational Risk Analysis (2023)
+# US Flight Operational Risk Analysis Setup (Web App)
 
-## 1. Prerequisites
-You need Python 3.8+ and the following libraries installed. You can install them via pip:
+This repository contains the Machine Learning Application predicting flight delays and modeling severe operational risks.
+
+## Architecture
+
+- **Frontend**: React (`/client`)
+- **Backend**: FastAPI (`/api`)
+- **Machine Learning Models**: Scikit-Learn (Hosted remotely on Hugging Face)
+
+## Prerequisites
+
+- Node.js
+- Python 3.8+
+
+## API Setup (Backend)
+
+The backend dynamically downloads the required multi-stage Machine Learning models from a remote Hugging Face repository upon first startup to keep the GitHub repository incredibly lightweight.
+
+1. Navigate to the API folder
 
 ```bash
-pip install pandas numpy matplotlib seaborn scikit-learn statsmodels folium mlxtend
+cd api
 ```
 
-## 2. Required Data Files
-Ensure the following 3 raw CSV files are in the same directory as the scripts:
+2. Install Python dependencies
 
-*   **US_flights_2023.csv** (Main flight data)
-*   **airports_geolocation.csv** (Airport coordinates)
-*   **weather_meteo_by_airport.csv** (Weather data)
+```bash
+pip install -r requirements.txt
+```
 
-## 3. Execution Order (Critical)
-You must run the scripts in this specific order to avoid "File Not Found" errors.
+3. Start the FastAPI Server (This will automatically download the models on first boot)
 
-### Step 1: Airport Clustering (Run First)
-*   **File:** Cluster.py
-*   **Action:** Runs K-Means clustering to categorize airports into 5 tiers based on performance.
-*   **Output:** Generates `airport_performance_tiers_enriched.csv`.
-*   **Note:** Classify.py and Rules.py require this output file to run.
+```bash
+uvicorn main:app --reload
+```
 
-### Step 2: Association Rule Mining
-*   **File:** Rules.py
-*   **Action:** Uses the Apriori algorithm to find "recipes" for severe delays (e.g., Rain + Tier 1 Airport = Severe Delay).
-*   **Output:** Generates `all_association_rules_full.csv`.
+## Client Setup (Frontend)
 
-### Step 3: Classification Modeling
-*   **File:** Classify.py
-*   **Action:** Trains multiple models (Random Forest, Gradient Boosting, etc.) to predict if a specific flight will be delayed.
-*   **Output:** Prints model performance metrics (AUC, Precision, Recall) and feature importance charts to the console.
+1. Open a new terminal and navigate to the client folder
 
-### Step 4: Regression Analysis (Independent)
-*   **File:** Reg.py
-*   **Action:** Runs a Linear Regression model to estimate the exact minutes of arrival delay.
-*   **Note:** This script is technically independent and can be run at any time, but it is best run after you have reviewed the clustering results.
+```bash
+cd client
+```
 
-## 4. Troubleshooting common errors
+2. Install npm dependencies
 
-### FileNotFoundError: airport_performance_tiers_enriched.csv:
-*   **Cause:** You tried to run Classify.py or Rules.py before Cluster.py.
-*   **Fix:** Run Cluster.py and wait for it to finish saving the CSV.
+```bash
+npm install
+```
 
-### Memory Errors (MemoryError):
-*   **Cause:** The dataset (6M+ rows) is too large for your RAM.
-*   **Fix:** Open the scripts and look for the `SAMPLE_SIZE` variable (usually near the top). Change it from 100000 to 50000 or smaller.
+3. Start the development server
+
+```bash
+npm run dev
+```
+
+_Note: The raw data analysis notebooks and scripts used to train the original models are preserved in the `archive` commit history for reference._
