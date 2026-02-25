@@ -1,0 +1,4 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '--build-arg', 'VITE_API_BASE_URL=https://flight-risk-backend-203243390484.northamerica-northeast2.run.app', '-t', 'gcr.io/gmattcloud1/flight-risk-frontend', '.']
+images: ['gcr.io/gmattcloud1/flight-risk-frontend']

@@ -26,7 +26,7 @@ app.add_middleware(
 )
 
 # Paths to models and data
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 RULES_CSV_PATH = os.path.join(BASE_DIR, "all_association_rules_full.csv")
 TIERS_CSV_PATH = os.path.join(BASE_DIR, "airport_performance_tiers_enriched.csv")
 
