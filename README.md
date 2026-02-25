@@ -1,5 +1,7 @@
 # ✈️ Flight Risk Evaluator
 
+🚀 **[Live Application Available on GCP!](https://flight-risk-frontend-203243390484.northamerica-northeast2.run.app/)**
+
 Welcome to the **Flight Risk Evaluator**! This project is an end-to-end Machine Learning web application designed to predict flight delays and model severe operational risks across major US airports. It integrates historical flight performance data with complex environmental risk factors to deliver actionable, real-time predictions.
 
 ![Flight Risk Evaluator Dashboard](dashboard.png)
@@ -27,7 +29,9 @@ This project implements a sophisticated multi-stage ML pipeline:
 2. **Association Rule Mining (Apriori)**: Extracts rules that strongly associate environmental conditions (e.g., wind > 15mph, snow > 0.5in) and temporal patterns with severe delays, generating actionable text-based warning conditions.
 3. **Supervised Learning (Random Forest)**: Acts as the core predictive engine that provides the continuous expected delay output in minutes for both departure and arrival phases.
 
-## 🚀 Quick Start Guide
+## 🚀 Local Development Quick Start Guide
+
+> **Note**: If you just want to use the application, you do not need to follow these steps! You can simply visit the [Live Application](https://flight-risk-frontend-203243390484.northamerica-northeast2.run.app/). The following instructions are for running the project locally.
 
 ### Prerequisites
 
@@ -67,5 +71,3 @@ npm run dev
 _The application UI will run on `http://localhost:5173`._
 
 ---
-
-_Note: The raw data analysis notebooks, extensive dataset filtering scripts, and clustering experiments used to train the original models are preserved in the `archive` directory for technical review._
